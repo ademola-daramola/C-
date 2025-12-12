@@ -1,4 +1,4 @@
-# C-
+# Cpp
 This is my C++ learning journey. Working from simpler projects to more complex ones hopefully
 
 A simple, interactive,two-player implementation of the classic Tic-Tac-Toe game. Built for learning, practicing algorithms, and demonstrating clean code structure.
