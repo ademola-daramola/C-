@@ -1,0 +1,29 @@
+#include <iostream>
+#include <cmath>
+
+// Define the function for the differential equation y' = f(x, y)
+float f(float x, float y) {
+    return 2/(3*sqrtf(y));
+}
+
+int main() {
+    float x = 0.0f; // Initial x
+    float y = 1.0f; // Initial y
+    float h = 0.05f; // Step size
+    int n = 40;     // Number of steps
+
+    std::cout << "Initial Condition: x = " << x << ", y = " << y << std::endl;
+
+    // Loop to calculate and print each step
+    for (int i = 1; i <= n; ++i) {
+        // Euler's Formula: y_new = y_old + h * f(x, y)
+        y += h * f(x, y);
+
+        // Update x for the next step
+        x += h;
+
+        std::cout << "Step " << i << ": x = " << x << ", y = " << y << std::endl;
+    }
+
+    return 0;
+}
