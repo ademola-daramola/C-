@@ -1,0 +1,27 @@
+#include<iostream>
+#include<cmath>
+//parameters
+const double h = 0.01;
+const double n = 20;
+const double b1 = 1;
+const double b2 = 1;
+const double a1 = 0.5;
+const double a2 = 0.5;
+//derivative
+double f(double x, double y) {
+    return y+ exp(-x);
+}
+
+
+int main() {
+	double x = 0;// initial x
+	double y = 2; // initial y
+    for (int i = 1; i <= n; ++i) {
+        double k1 = h * f(x,y);
+        double k2 = h * f(x + (b1 * h), y + (b2 * k1));
+        y += a1 * k1 + a2 * k2; //compute y
+        x += h; // Update x for the next step
+        std::cout << "Step " << i << ": x = " << x << ", y = " << y << std::endl;
+    }
+    return 0;
+}
