@@ -1,0 +1,30 @@
+#include <iostream>
+#include<cmath>
+
+//intervals[a,b]
+double a=1;
+double b=1.5;
+double x;
+
+double f(double x) {
+	return pow(x, 3) + 3 * x - 5;
+}
+
+int main() {
+	for (int i = 0; i < 100; i++)
+	{
+		x = (a * f(b) - b * f(a)) / (f(b) - f(a));
+		if (f(x) == 0) {
+			break;
+		}
+		else if (f(x) * f(a) < 0) {
+			b = x;
+		}
+		else {
+			a = x;
+		}
+		std::cout << "Iteration" << i + 1 << ": x = " << x << std::endl;
+	}
+	std::cout << "The root is: " << x << std::endl;
+	return 0;
+}
