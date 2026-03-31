@@ -1,0 +1,92 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+
+struct course {
+    std::string name;
+    float score;
+    float gradePoint;
+    float credits;
+    char letterGrade;
+};
+
+// We now pass global totals by reference to update them directly
+void addTermToCGPA(int courseno, std::vector<course>& allCourses, float scale, float& globalPoints, float& globalCredits) {
+    for (int i = 0; i < courseno; i++) {
+        course c;
+        std::cout << "\nEnter name for Course " << i + 1 << ": ";
+        std::cin.ignore(1000, '\n');
+        std::getline(std::cin, c.name);
+
+        std::cout << "Enter score (0-100): ";
+        std::cin >> c.score;
+
+        std::cout << "Enter credit hours: ";
+        std::cin >> c.credits;
+
+        // Dynamic scale handling
+        if (c.score >= 70) { c.gradePoint = scale; c.letterGrade = 'A'; }
+        else if (c.score >= 60) { c.gradePoint = scale - 1.0f; c.letterGrade = 'B'; }
+        else if (c.score >= 50) { c.gradePoint = scale - 2.0f; c.letterGrade = 'C'; }
+        else if (c.score >= 45) { c.gradePoint = scale - 3.0f; c.letterGrade = 'D'; }
+        else if (c.score >= 40) { c.gradePoint = scale - 4.0f; c.letterGrade = 'E'; }
+        else { c.gradePoint = 0.0f; c.letterGrade = 'F'; }
+
+        // Core CGPA Math: Summing (Point * Credit) and Summing Credits
+        globalPoints += (c.gradePoint * c.credits);
+        globalCredits += c.credits;
+
+        allCourses.push_back(c);
+    }
+}
+
+int main() {
+    int years, term;
+    float scale;
+    std::vector<course> allCourses;
+
+    // Global tracking variables for the formula
+    float totalQualityPoints = 0.0f;
+    float totalCreditHours = 0.0f;
+
+    std::cout << "Enter program duration (years): ";
+    std::cin >> years;
+    std::cout << "Enter term basis (2 for semester, 3 for trimester): ";
+    std::cin >> term;
+    std::cout << "Enter CGPA scale (4.0 or 5.0): ";
+    std::cin >> scale;
+
+    for (int j = 1; j <= (years * term); j++) {
+        int courseno;
+        std::cout << "\n--- Year " << (j - 1) / term + 1 << " Term " << (j - 1) % term + 1 << " ---" << std::endl;
+        std::cout << "Number of courses (0 to stop): ";
+        std::cin >> courseno;
+
+        if (courseno <= 0) break;
+
+        addTermToCGPA(courseno, allCourses, scale, totalQualityPoints, totalCreditHours);
+    }
+
+    if (totalCreditHours > 0) {
+        float finalCGPA = totalQualityPoints / totalCreditHours;
+
+        std::cout << "\n================================" << std::endl;
+        std::cout << "        FINAL REPORTCARD        " << std::endl;
+        std::cout << "================================" << std::endl;
+
+        for (const auto& c : allCourses) {
+            std::cout << std::left << std::setw(15) << c.name
+                << " | Credits: " << c.credits
+                << " | Grade: " << c.letterGrade << std::endl;
+        }
+
+        std::cout << "\n--------------------------------" << std::endl;
+        std::cout << "Total Credits Earned: " << totalCreditHours << std::endl;
+        std::cout << "Weighted CGPA: " << std::fixed << std::setprecision(2)
+            << finalCGPA << " / " << scale << std::endl;
+        std::cout << "--------------------------------" << std::endl;
+    }
+
+    return 0;
+}
